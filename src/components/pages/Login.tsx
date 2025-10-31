@@ -4,8 +4,8 @@ const Login: React.FC = () => {
     const spotify = {
         // client_id: "f2e286ece2574ad6b334b55d03764483",
         client_id: "4250d84acd1c4588ae599ade84fbf69b",
-        REDIRECT_URI: "https://weproshakhzodspoty.netlify.app/",
-        // REDIRECT_URI: "http://localhost:5173/home",
+        REDIRECT_URI: "https://weproshakhzodspoty.netlify.app",
+        // REDIRECT_URI: "http://localhost:5173/",
         AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
         RESPONSE_TYPE: "token",
         token: ""
@@ -25,7 +25,9 @@ const Login: React.FC = () => {
                     Log in to Spotify
                 </h1>
 
-                <a href={`${spotify.AUTH_ENDPOINT}?client_id=${spotify.client_id}&redirect_uri=${spotify.REDIRECT_URI}&response_type=${spotify.RESPONSE_TYPE}&scope=playlist-modify-public`}>
+                <a
+                    href={`${spotify.AUTH_ENDPOINT}?client_id=${spotify.client_id}&redirect_uri=${spotify.REDIRECT_URI}&response_type=${spotify.RESPONSE_TYPE}&scope=playlist-modify-public&show_dialog=true`}
+                >
                     <button className="w-[300px] bg-[#1DB954] hover:bg-[#1ed760] transition-all duration-300 font-semibold py-3 rounded-full text-[18px] text-black ">
                         Continue with Spotify
                     </button>
