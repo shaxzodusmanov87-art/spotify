@@ -3,9 +3,9 @@ const Login: React.FC = () => {
 
     const spotify = {
         // client_id: "f2e286ece2574ad6b334b55d03764483",
-        // REDIRECT_URI: "https://weprospoty.netlify.app/",
-        client_id: "Dcfe923b2d660439caf2b557b21f31221",
-        REDIRECT_URI: "http://localhost:5173",
+        client_id: "4250d84acd1c4588ae599ade84fbf69b",
+        REDIRECT_URI: "https://weproshakhzodspoty.netlify.app/",
+        // REDIRECT_URI: "http://localhost:5173/home",
         AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
         RESPONSE_TYPE: "token",
         token: ""
