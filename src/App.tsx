@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router"
 import Home from "./components/pages/Home"
 import About from "./components/pages/About"
-import Login from "./components/pages/Login"
-import Layout from "./components/layouts/Layout"
+import Login from "./components/pages/Login2"
+import Layout from "./components/layouts/Layout2"
 
 const App: React.FC = () => {
 
