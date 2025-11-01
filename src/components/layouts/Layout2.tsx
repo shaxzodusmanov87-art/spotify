@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { Outlet } from "react-router";
+import Header from "../my_ui/Header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "../my_ui/AppSidebar";
 
 
 const Layout: React.FC = () => {
@@ -27,30 +30,36 @@ const Layout: React.FC = () => {
 
         if (!token && hash) {
             token = hash
-              .substring(1)
-              .split("&")
-              .find((elem) => elem.startsWith("access_token"))
-              ?.split("=")[1] ?? null;
-      
+                .substring(1)
+                .split("&")
+                .find((elem) => elem.startsWith("access_token"))
+                ?.split("=")[1] ?? null;
+
             console.log("Extracted token:", token);
-      
+
             if (token) {
-              window.localStorage.setItem("token", token);
-              window.location.hash = ""; // очистить hash без перезагрузки
-              fetchUserData(token);
+                window.localStorage.setItem("token", token);
+                window.location.hash = ""; // очистить hash без перезагрузки
+                fetchUserData(token);
             }
-          } else if (token) {
+        } else if (token) {
             fetchUserData(token);
-          }
+        }
 
     }, [])
 
     return (
         <>
-            <header>Header</header>
-            <main>
-                {/* {children} */}
-                <Outlet />
+            <Header />
+            <main className=" h-screen pt-10">
+                    <SidebarProvider>
+                        <AppSidebar />
+                        <SidebarTrigger className="mt-10" />
+
+                        <Outlet />
+
+                    </SidebarProvider>
+
             </main>
             <footer>Footer</footer>
         </>

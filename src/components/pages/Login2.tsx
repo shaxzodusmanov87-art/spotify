@@ -32,7 +32,7 @@ const Login: React.FC = () => {
                     </button>
                 </a>
 
-                <div className="w-full h-0.5 bg-neutral-700 my-2"></div>
+                <div className="w-full h-0.5 bg-neutral-900 flex items-center h-11 rounded-full w-[420px] px-2 gap-2 my-2"></div>
 
                 <p className="text-gray-400 text-[13px] text-center">
                     <span>By continuing, you agree to Spotify's </span>
