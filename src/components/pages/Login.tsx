@@ -1,15 +1,46 @@
+import React from "react";
+
+const CLIENT_ID = "4250d84acd1c4588ae599ade84fbf69b";
+const REDIRECT_URI = "https://weproshakhzodspoty.netlify.app";
+const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+const RESPONSE_TYPE = "code";
+const SCOPES = ["user-read-private", "user-read-email", "playlist-modify-public"];
+
+function generateRandomString(length: number) {
+  let text = "";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
+async function generateCodeChallenge(codeVerifier: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(codeVerifier));
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
 
 const Login: React.FC = () => {
 
-    const spotify = {
-        // client_id: "f2e286ece2574ad6b334b55d03764483",
-        client_id: "4250d84acd1c4588ae599ade84fbf69b",
-        REDIRECT_URI: "https://weproshakhzodspoty.netlify.app",
-        // REDIRECT_URI: "http://localhost:5173/",
-        AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
-        RESPONSE_TYPE: "token",
-        token: ""
-    }
+    const handleLogin = async () => {
+        const codeVerifier = generateRandomString(128);
+        const codeChallenge = await generateCodeChallenge(codeVerifier);
+    
+        localStorage.setItem("code_verifier", codeVerifier);
+    
+        const url = new URL(AUTH_ENDPOINT);
+        url.searchParams.append("client_id", CLIENT_ID);
+        url.searchParams.append("response_type", RESPONSE_TYPE);
+        url.searchParams.append("redirect_uri", REDIRECT_URI);
+        url.searchParams.append("scope", SCOPES.join(" "));
+        url.searchParams.append("code_challenge_method", "S256");
+        url.searchParams.append("code_challenge", codeChallenge);
+    
+        window.location.href = url.toString();
+      };
 
     return (
         <div className="w-full h-screen bg-black flex justify-center items-center font-sans">
@@ -24,14 +55,10 @@ const Login: React.FC = () => {
                 <h1 className="text-white text-2xl font-bold mt-2">
                     Log in to Spotify
                 </h1>
-
-                <a
-                    href={`${spotify.AUTH_ENDPOINT}?client_id=${spotify.client_id}&redirect_uri=${spotify.REDIRECT_URI}&response_type=${spotify.RESPONSE_TYPE}&scope=playlist-modify-public&show_dialog=true`}
-                >
-                    <button className="w-[300px] bg-[#1DB954] hover:bg-[#1ed760] transition-all duration-300 font-semibold py-3 rounded-full text-[18px] text-black ">
+                
+                    <button onClick={handleLogin} className="w-[300px] bg-[#1DB954] hover:bg-[#1ed760] transition-all duration-300 font-semibold py-3 rounded-full text-[18px] text-black ">
                         Continue with Spotify
                     </button>
-                </a>
 
                 <div className="w-full h-0.5 bg-neutral-700 my-2"></div>
 
