@@ -1,115 +1,69 @@
-// import React, { useEffect, useState } from "react";
-// import { Outlet } from "react-router";
+import React, { useEffect } from "react";
+import { Outlet } from "react-router";
+import Header from "../my_ui/Header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "../my_ui/AppSidebar";
 
-// const CLIENT_ID = "4250d84acd1c4588ae599ade84fbf69b";
-// const REDIRECT_URI = "https://weproshakhzodspoty.netlify.app";
-// const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 
-// const Layout: React.FC = () => {
-//   const [user, setUser] = useState<any>(null);
+const Layout: React.FC = () => {
+    async function fetchUserData(token: string) {
+        try {
+            const res = await fetch("https://api.spotify.com/v1/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
-//   // --- Получаем токен по коду ---
-//   async function fetchAccessToken(code: string) {
-//     const codeVerifier = localStorage.getItem("code_verifier");
+            if (!res.ok) throw new Error(res.statusText);
 
-//     if (!codeVerifier) {
-//       console.error("❌ Code verifier not found in localStorage");
-//       return;
-//     }
+            const data = await res.json();
 
-//     const body = new URLSearchParams({
-//       client_id: CLIENT_ID,
-//       grant_type: "authorization_code",
-//       code,
-//       redirect_uri: REDIRECT_URI,
-//       code_verifier: codeVerifier,
-//     });
+            console.log(data);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-//     const response = await fetch(TOKEN_ENDPOINT, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//       body,
-//     });
+    useEffect(() => {
+        const hash = window.location.hash;
+        let token = window.localStorage.getItem("token")
 
-//     const data = await response.json();
-//     console.log("Access Token Response:", data);
+        if (!token && hash) {
+            token = hash
+                .substring(1)
+                .split("&")
+                .find((elem) => elem.startsWith("access_token"))
+                ?.split("=")[1] ?? null;
 
-//     if (data.access_token) {
-//       localStorage.setItem("access_token", data.access_token);
-//       return data.access_token;
-//     } else {
-//       console.error("❌ No access_token returned:", data);
-//       return null;
-//     }
-//   }
+            console.log("Extracted token:", token);
 
-//   // --- Получаем данные пользователя ---
-//   async function fetchUserData(token: string) {
-//     try {
-//       const res = await fetch("https://api.spotify.com/v1/me", {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
+            if (token) {
+                window.localStorage.setItem("token", token);
+                window.location.hash = ""; // очистить hash без перезагрузки
+                fetchUserData(token);
+            }
+        } else if (token) {
+            fetchUserData(token);
+        }
 
-//       if (!res.ok) {
-//         console.error("❌ Spotify API returned:", res.status, res.statusText);
-//         if (res.status === 401) {
-//           // Токен недействителен — удаляем и перезапрашиваем
-//           localStorage.removeItem("access_token");
-//           window.location.href = "/";
-//         }
-//         return;
-//       }
+    }, [])
 
-//       const data = await res.json();
-//       console.log("User Data:", data);
-//       setUser(data);
-//     } catch (err) {
-//       console.error("❌ Failed to fetch user data:", err);
-//     }
-//   }
+    return (
+        <>
+            <Header />
+            <main className=" h-screen pt-10">
+                    <SidebarProvider>
+                        <AppSidebar />
+                        <SidebarTrigger className="mt-10" />
 
-//   useEffect(() => {
-//     const params = new URLSearchParams(window.location.search);
-//     const code = params.get("code");
-//     const token = localStorage.getItem("access_token");
+                        <Outlet />
 
-//     if (token) {
-//       console.log("🔑 Using stored token");
-//       fetchUserData(token);
-//       return;
-//     }
+                    </SidebarProvider>
 
-//     if (code) {
-//       console.log("🎟 Exchanging code for token...");
-//       fetchAccessToken(code).then((newToken) => {
-//         if (newToken) {
-//           fetchUserData(newToken);
-//           // Очистим URL (убираем ?code=...)
-//           window.history.replaceState({}, document.title, REDIRECT_URI);
-//         }
-//       });
-//     }
-//   }, []);
+            </main>
+            <footer>Footer</footer>
+        </>
+    )
+}
 
-//   return (
-//     <div>
-//       <header>Header</header>
-//       <main>
-//         {user ? (
-//           <div>
-//             <h2>Welcome, {user.display_name}</h2>
-//             {user.images?.[0]?.url && (
-//               <img src={user.images[0].url} alt="User avatar" width={100} />
-//             )}
-//           </div>
-//         ) : (
-//           <p>Loading user...</p>
-//         )}
-//         <Outlet />
-//       </main>
-//       <footer>Footer</footer>
-//     </div>
-//   );
-// };
-
-// export default Layout;
+export default Layout
