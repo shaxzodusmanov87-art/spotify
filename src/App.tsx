@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router"
 import Home from "./components/pages/Home"
-import About from "./components/pages/About"
 import Login from "./components/pages/Login"
 import Layout from "./components/layouts/Layout"
 
@@ -14,7 +13,6 @@ const App: React.FC = () => {
 
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
 
         </Route>
 

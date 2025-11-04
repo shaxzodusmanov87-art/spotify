@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import Header from "../my_ui/Header";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "../my_ui/AppSidebar";
-
+import Sidebar from "../my_ui/Sidebar";
+import SidebarRight from "../my_ui/SidebarRight";
 
 const Layout: React.FC = () => {
+    const [user, setUser] = useState<any>(null);
+
     async function fetchUserData(token: string) {
         try {
             const res = await fetch("https://api.spotify.com/v1/me", {
@@ -14,13 +15,16 @@ const Layout: React.FC = () => {
                 }
             });
 
-            if (!res.ok) throw new Error(res.statusText);
+            if (!res.ok) throw new Error(res.status + "");
 
             const data = await res.json();
 
             console.log(data);
-        } catch (e) {
-            console.log(e)
+        } catch (e: any) {
+            if (e.message === "400" || e.message === "401") {
+                window.localStorage.removeItem("token");
+                window.location.assign("/login");
+            }
         }
     }
 
@@ -39,26 +43,28 @@ const Layout: React.FC = () => {
 
             if (token) {
                 window.localStorage.setItem("token", token);
-                window.location.hash = ""; // очистить hash без перезагрузки
-                fetchUserData(token);
+                window.location.href = ""; // очистить hash без перезагрузки
             }
-        } else if (token) {
-            fetchUserData(token);
+        }
+        if (token) {
+            fetchUserData(token).then((data) => setUser(data));
         }
 
     }, [])
 
+    
+
     return (
         <>
             <Header />
-            <main className=" h-screen pt-10">
-                    <SidebarProvider>
-                        <AppSidebar />
-                        <SidebarTrigger className="mt-10" />
+            <main className="h-screen pt-10 bg-black flex justify-between">
+                <Sidebar />
+                <div>
+                    <Outlet />
 
-                        <Outlet />
-
-                    </SidebarProvider>
+                </div>
+                < SidebarRight />
+                
 
             </main>
             <footer>Footer</footer>

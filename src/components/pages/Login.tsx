@@ -3,9 +3,9 @@ const Login: React.FC = () => {
 
     const spotify = {
         // client_id: "f2e286ece2574ad6b334b55d03764483",
-        // REDIRECT_URI: "http://localhost:5173",
+        REDIRECT_URI: "http://192.168.239.172:5173/",
         client_id: "4250d84acd1c4588ae599ade84fbf69b", 
-        REDIRECT_URI: "https://weproshakhzodspoty.netlify.app",
+        // REDIRECT_URI: "https://weproshakhzodspoty.netlify.app",
         AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
         RESPONSE_TYPE: "token"
     }   
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
                     </button>
                 </a>
 
-                <div className="w-full h-0.5 bg-neutral-900 flex items-center h-11 rounded-full w-[420px] px-2 gap-2 my-2"></div>
+                <div className="w-full h-0.5 bg-neutral-400 flex items-center rounded-full  px-2 gap-2 my-2"></div>
 
                 <p className="text-gray-400 text-[13px] text-center">
                     <span>By continuing, you agree to Spotify's </span>
