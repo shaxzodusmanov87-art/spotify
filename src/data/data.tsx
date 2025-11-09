@@ -20,7 +20,7 @@ export const PlaylistData = [
 
 export const MainData = [
    "Начни с этой музыки",
-   "Послушай сегодея",
+   "Послушай сегодня",
    "Недавно прослучшано",
    "ATLXS"
 ]

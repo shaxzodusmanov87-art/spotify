@@ -1,14 +1,9 @@
 
 const Login: React.FC = () => {
 
-    const spotify = {
-        // client_id: "f2e286ece2574ad6b334b55d03764483",
-        REDIRECT_URI: "http://192.168.239.172:5173/",
-        client_id: "4250d84acd1c4588ae599ade84fbf69b", 
-        // REDIRECT_URI: "https://weproshakhzodspoty.netlify.app",
-        AUTH_ENDPOINT: "https://accounts.spotify.com/authorize",
-        RESPONSE_TYPE: "token"
-    }   
+    const handleLogin = async () => {
+		window.location.href = "http://localhost:3000/login";
+	};
 
     return (
         <div className="w-full h-screen bg-black flex justify-center items-center font-sans">
@@ -24,13 +19,13 @@ const Login: React.FC = () => {
                     Log in to Spotify
                 </h1>
 
-                <a
-                    href={`${spotify.AUTH_ENDPOINT}?client_id=${spotify.client_id}&redirect_uri=${spotify.REDIRECT_URI}&response_type=${spotify.RESPONSE_TYPE}&scope=user-read-email%20user-read-private%20playlist-modify-public`}
-                >
-                    <button className="w-[300px] bg-[#1DB954] hover:bg-[#1ed760] transition-all duration-300 font-semibold py-3 rounded-full text-[18px] text-black ">
+                
+                    <button
+                        onClick={handleLogin}
+                        className="w-[300px] bg-[#1DB954] hover:bg-[#1ed760] transition-all duration-300 font-semibold py-3 rounded-full text-[18px] text-black ">
                         Continue with Spotify
                     </button>
-                </a>
+               
 
                 <div className="w-full h-0.5 bg-neutral-400 flex items-center rounded-full  px-2 gap-2 my-2"></div>
 

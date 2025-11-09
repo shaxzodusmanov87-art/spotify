@@ -1,73 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import Header from "../my_ui/Header";
 import Sidebar from "../my_ui/Sidebar";
 import SidebarRight from "../my_ui/SidebarRight";
+import Player from "../my_ui/Player";
+
+export const contextID = createContext<any>(null)
 
 const Layout: React.FC = () => {
-    const [user, setUser] = useState<any>(null);
-
-    async function fetchUserData(token: string) {
-        try {
-            const res = await fetch("https://api.spotify.com/v1/me", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (!res.ok) throw new Error(res.status + "");
-
-            const data = await res.json();
-
-            console.log(data);
-        } catch (e: any) {
-            if (e.message === "400" || e.message === "401") {
-                window.localStorage.removeItem("token");
-                window.location.assign("/login");
-            }
-        }
-    }
 
     useEffect(() => {
-        const hash = window.location.hash;
-        let token = window.localStorage.getItem("token")
+        console.log(localStorage.getItem("token")); // token => access_token
+    }, []);
 
-        if (!token && hash) {
-            token = hash
-                .substring(1)
-                .split("&")
-                .find((elem) => elem.startsWith("access_token"))
-                ?.split("=")[1] ?? null;
+    const [trackID, setTrackID] = useState(null)
+    const [playlists, setPlaylists] = useState<any[]>([]);
+    const [currentTrack, setCurrentTrack] = useState<any>({
+        name: "PASSO BEM SOLTO",
+        artists: "ATLXS",
+        image: "https://avatars.yandex.net/get-music-content/15401259/5b706773.a.35470856-1/m1000x1000",
+        id: "",
+        album: "",
+        duration: 0
+    });
+    const [albumID, setAlbumID] = useState<string>('');
+    const [activeSidebar, setActiveSidebar] = useState(true)
 
-            console.log("Extracted token:", token);
-
-            if (token) {
-                window.localStorage.setItem("token", token);
-                window.location.href = ""; // очистить hash без перезагрузки
-            }
-        }
-        if (token) {
-            fetchUserData(token).then((data) => setUser(data));
-        }
-
-    }, [])
-
-    
 
     return (
         <>
-            <Header />
-            <main className="h-screen pt-10 bg-black flex justify-between">
-                <Sidebar />
-                <div>
-                    <Outlet />
+            <contextID.Provider value={{ trackID, setTrackID, playlists, setPlaylists, currentTrack, setCurrentTrack, albumID, setAlbumID, activeSidebar, setActiveSidebar }}>
+                <Header />
+                <main className={`w-full min-w-[900px] h-screen pt-10 bg-black grid ${activeSidebar ? "grid-cols-[370px_1fr_370px]" : "grid-cols-[70px_1fr_370px]"} gap-3`}>
+                    <Sidebar />
+                    <div className="mt-5 overflow-y-auto scrollbar-hidden rounded-[5px] h-fit bg-neutral-950">
+                        <Outlet />
+                    </div>
+                    < SidebarRight />
 
-                </div>
-                < SidebarRight />
-                
 
-            </main>
-            <footer>Footer</footer>
+                </main>
+                <Player />
+
+            </contextID.Provider>
         </>
     )
 }

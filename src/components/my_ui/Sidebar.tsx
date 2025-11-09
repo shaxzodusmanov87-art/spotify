@@ -1,5 +1,5 @@
 import { Check, LucidePanelLeftOpen, LucidePanelRightOpen, Search } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { Button } from "../ui/button"
 import { FaPlus } from "react-icons/fa6"
 import { RiExpandDiagonalLine } from 'react-icons/ri';
@@ -7,15 +7,19 @@ import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { DropdownMenuSidebar } from "@/data/data";
 import { GoDotFill } from "react-icons/go";
 import { VscLibrary } from 'react-icons/vsc';
+import { Link } from "react-router";
+import { contextID } from "../layouts/Layout";
 
 const Sidebar = () => {
 
-  const [activeSidebar, setActiveSidebar] = useState(true)
+  // const [activeSidebar, setActiveSidebar] = useState(true)
   const [activeIndex, setActiveIndex] = useState<number | null>(0)
   const [activeDropdown, setActiveDropdown] = useState(false)
   const [dropdownButtonText, setDropdownButtonText] = useState("Недавние")
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const [hovered, setHovered] = useState(false);
+
+  const { playlists, activeSidebar, setActiveSidebar } = useContext(contextID)
 
   useEffect(() => {
 
@@ -37,13 +41,13 @@ const Sidebar = () => {
 
   return (
     <>
-      < div className={`${activeSidebar ? "group w-[385px] pt-3 pl-3 pr-5" : "w-[70px] flex flex-col items-center pt-4 gap-4"} h-[80vh]  bg-neutral-950 mt-5 ml-3 rounded-[5px] text-white`}>
+      < div className={`${activeSidebar ? "group pt-3 pl-3 pr-5" : "flex flex-col items-center pt-4 gap-4"} h-[80vh]  bg-neutral-950 mt-5 ml-3 rounded-[5px] text-white`}>
         < div className="flex justify-between items-center" >
           <div className="flex gap-2 items-center">
-            <button onClick={() => setActiveSidebar((prevActiveMenu) => !prevActiveMenu)} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-              {activeSidebar 
-                ? <LucidePanelRightOpen className="w-5 text-neutral-400" /> 
-                : (hovered ? (<LucidePanelLeftOpen className="w-10 text-neutral-400" />) : (<VscLibrary className="w-10 h-6 text-neutral-400" />) )}
+            <button onClick={() => setActiveSidebar((prevActiveMenu: any) => !prevActiveMenu)} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+              {activeSidebar
+                ? <LucidePanelRightOpen className="w-5 text-neutral-400" />
+                : (hovered ? (<LucidePanelLeftOpen className="w-10 text-neutral-400" />) : (<VscLibrary className="w-10 h-6 text-neutral-400" />))}
             </button>
             {activeSidebar && <p className="text-[14px] font-bold">Моя медиатека</p>}
           </div>
@@ -63,7 +67,7 @@ const Sidebar = () => {
 
         </div >
 
-        {activeSidebar 
+        {activeSidebar
           ? <Button className="rounded-full text-[12px] bg-neutral-900 hover:bg-neutral-800 h-7 mt-3">Плейлисты</Button>
           : <FaPlus className="bg-neutral-900 hover:bg-neutral-800 transition-all duration-300 h-8 w-8 p-2 rounded-full text-neutral-400" />
         }
@@ -103,17 +107,20 @@ const Sidebar = () => {
 
 
         <div className={`flex items-center gap-3 ${activeSidebar && "mt-2"} hover:bg-neutral-900 rounded-[5px] h-15 px-2`}>
-          <img src="https://avatars.yandex.net/get-music-content/15401259/5b706773.a.35470856-1/m1000x1000" className="w-12 rounded-[5px]" />
+          <img src={playlists[0]?.images[0]?.url || "https://mosaic.scdn.co/640/ab67616d00001e022c3f80f3312f7d013353a61fab67616d00001e0236385e0fad3c87e8e8f19071ab67616d00001e024096fd5e8f501c024a70c642ab67616d00001e02c80fe27586c2da910984cb9a"} className="w-12 rounded-[5px]" />
           {activeSidebar &&
-            <div>
-              <p className="text-[14px] text-[#1DB954] font-semibold">My Playlist #1</p>
-              <div className="flex items-center text-[13px] text-neutral-400">
-                <p>Плейлист</p>
-                <GoDotFill className="mt-1 h-2" />
-                <p className="font-semibold">Shaxzod Usmanov</p>
+            <Link to="/playlist" >
+              <div>
+                <p className="text-[14px] text-[#1DB954] font-semibold">My Playlist #1</p>
+                <div className="flex items-center text-[13px] text-neutral-400">
+                  <p>Плейлист</p>
+                  <GoDotFill className="mt-1 h-2" />
+                  <p className="font-semibold">Shaxzod Usmanov</p>
 
+                </div>
               </div>
-            </div>
+
+            </Link>
           }
 
         </div>
