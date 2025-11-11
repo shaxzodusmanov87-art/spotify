@@ -25,17 +25,22 @@ const Layout: React.FC = () => {
     });
     const [albumID, setAlbumID] = useState<string>('');
     const [activeSidebar, setActiveSidebar] = useState(true)
+    const [wideSidebarRight, setWideSidebarRight] = useState(false)
 
 
     return (
         <>
-            <contextID.Provider value={{ trackID, setTrackID, playlists, setPlaylists, currentTrack, setCurrentTrack, albumID, setAlbumID, activeSidebar, setActiveSidebar }}>
+            <contextID.Provider value={{ trackID, setTrackID, playlists, setPlaylists, currentTrack, setCurrentTrack, albumID, setAlbumID, activeSidebar, setActiveSidebar, wideSidebarRight, setWideSidebarRight }}>
                 <Header />
                 <main className={`w-full min-w-[900px] h-screen pt-10 bg-black grid ${activeSidebar ? "grid-cols-[370px_1fr_370px]" : "grid-cols-[70px_1fr_370px]"} gap-3`}>
-                    <Sidebar />
-                    <div className="mt-5 overflow-y-auto scrollbar-hidden rounded-[5px] h-fit bg-neutral-950">
-                        <Outlet />
-                    </div>
+                    {!wideSidebarRight && (
+                        <>
+                            <Sidebar />
+                            <div className="mt-5 overflow-y-auto scrollbar-hidden rounded-[5px] h-fit bg-neutral-950">
+                                <Outlet />
+                            </div>
+                        </>
+                    )}
                     < SidebarRight />
 
 

@@ -46,10 +46,12 @@ const Playlist = () => {
                     console.log("ID первого плейлиста:", firstPlaylistId);
 
                     const tracksRes = await fetchData(`/playlists/${firstPlaylistId}/tracks`);
+                    
+                    setTracks(tracksRes.items || []);
                     console.log("Треки этого плейлиста:", tracksRes);
                     console.log("Items треков:", tracksRes.items); 
 
-                    setTracks(tracksRes.items || []);
+                    
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);

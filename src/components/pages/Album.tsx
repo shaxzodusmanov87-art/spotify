@@ -18,16 +18,16 @@ const Album = () => {
 
   const [album, setAlbum] = useState<any[]>([]);
   const { id } = useParams()
-
+  
   const { setTrackID, setAlbumID } = useContext(contextID)
-
+  
   // AlbumID - чтобы чeрез context передать в => SidebarRight и отобразить
   useEffect(() => {
     if (id) {
       setAlbumID(id);
     }
   }, [id, setAlbumID])
-
+  
   // Tracks
   useEffect(() => {
     fetchData(`/albums/${id}/tracks`).then((res) => {
@@ -35,7 +35,7 @@ const Album = () => {
       console.log("this is my album", res.items)
     });
   }, [id])
-
+  
   // Albums
   const [albums, setAlbums] = useState<any>(null);
 
@@ -43,6 +43,7 @@ const Album = () => {
     fetchData(`/albums/${id}`).then((res) => {
       console.log("this is album itself", res)
       setAlbums(res)
+      
     });
   }, [])
 
